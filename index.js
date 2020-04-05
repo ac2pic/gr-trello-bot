@@ -21,10 +21,15 @@ function sendDiscordMessage(message) {
 
 const chooseRandom = (arr) => arr[parseInt(Math.random() * arr.length)];
 
+
+app.head('/trello', () => {
+	console.log('Trello called.');
+});
+
 app.post("/trello", async (req, res, next) => {
 	const { action, model } = req.body;
 
-	if (action.type === 'updateCard') {
+	if (action && action.type === 'updateCard') {
 
 		const data = action.data;
 		if (data.listBefore) {
