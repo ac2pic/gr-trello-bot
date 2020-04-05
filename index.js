@@ -22,18 +22,32 @@ function sendDiscordMessage(message) {
 const chooseRandom = (arr) => arr[parseInt(Math.random() * arr.length)];
 
 app.post("/trello", async (req, res, next) => {
-	const { name, url } = req.body;
+	const { action, model } = req.body;
 
-	await sendDiscordMessage({
-		"embeds": [{
-			"color": 6232278,
-			"title": "Step Complete",
-			"description": `The [${name}](${url}) step has been completed!`,
-			"image": {
-				"url": chooseRandom(gifs)
+	if (action.type === 'updateCard') {
+
+		const data = action.data;
+		if (data.listBefore) {
+			const [old_list, new_list] = [data.listBefore.name, data.listAfter.name];
+
+			if (old_list !== new_list && new_list.toLowerCase() === 'completed') {
+				console.log(req.body);
+				/*await sendDiscordMessage({
+					"embeds": [{
+						"color": 6232278,
+						"title": "Step Complete",
+						"description": `The [${name}](${url}) step has been completed!`,
+						"image": {
+							"url": chooseRandom(gifs)
+						}
+					}]
+				});*/
 			}
-		}]
-	});
+
+		}
+
+	}
+
 	res.send('OK');
 });
 
