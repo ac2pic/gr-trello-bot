@@ -4,10 +4,28 @@ const express  = require('express'),
     port = process.env.PORT || 3123;
 
 app.use( bodyParser.json() );
+const discordWebhookUrl = 'https://discordapp.com/api/webhooks/696156837963104277/n1AhF8X0YlPxfxTEsGsxwfUjNKaNkAbFr7FRAAkqg2e_XqD2OsciPLIFNGmLRZr3O9DY';
 
-app.post("/trello", function(req, res, next) {
-	// const {} = req.body;
-	console.log(req.body);
+function sendDiscordMessage(message) {
+	return fetch(discordWebhookUrl, {
+		method: "POST",
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify(message)
+	});
+}
+
+app.post("/trello", async (req, res, next) => {
+	const {name, url} = req.body;
+
+	await sendDiscordMessage({
+		"content": `The ${name} step has been completed!\n${url}`,
+		"embed": {
+			"color": 6232278,
+			"image": {
+			  "url": "https://cdn.discordapp.com/attachments/696050162149097613/696129710266253392/tumblr_p4rz82xWrm1vte390o3_500.gif"
+			}
+		}
+	});
 	res.send('OK');
 });
 
