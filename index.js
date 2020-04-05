@@ -37,7 +37,7 @@ app.post("/trello", async (req, res, next) => {
 			const [old_list, new_list] = [data.listBefore.name, data.listAfter.name];
 
 			if (old_list !== new_list && new_list.toLowerCase() === 'completed') {
-				console.log(req.body);
+				console.log(data);
 				/*await sendDiscordMessage({
 					"embeds": [{
 						"color": 6232278,
