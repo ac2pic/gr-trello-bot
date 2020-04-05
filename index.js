@@ -11,7 +11,7 @@ const gifs = [
 ];
 
 function sendDiscordMessage(message) {
-	return fetch(process.env.webhook_url, {
+	return fetch(process.env.webhook_url.trim(), {
 		method: "POST",
 		headers: {'Content-Type': 'application/json'},
 		body: JSON.stringify(message)
