@@ -37,17 +37,20 @@ app.post("/trello", async (req, res, next) => {
 			const [old_list, new_list] = [data.listBefore.name, data.listAfter.name];
 
 			if (old_list !== new_list && new_list.toLowerCase() === 'completed') {
-				console.log(data);
-				/*await sendDiscordMessage({
+				const { name, shortLink } = data.card;
+
+				const card_url = `https://trello.com/c/${shortLink}/`;
+
+				await sendDiscordMessage({
 					"embeds": [{
 						"color": 6232278,
 						"title": "Step Complete",
-						"description": `The [${name}](${url}) step has been completed!`,
+						"description": `The [${name}](${card_url}) step has been completed!`,
 						"image": {
 							"url": chooseRandom(gifs)
 						}
 					}]
-				});*/
+				});
 			}
 
 		}
