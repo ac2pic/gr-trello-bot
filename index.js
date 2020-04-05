@@ -22,8 +22,9 @@ function sendDiscordMessage(message) {
 const chooseRandom = (arr) => arr[parseInt(Math.random() * arr.length)];
 
 
-app.head('/trello', () => {
+app.head('/trello', (req, res, next) => {
 	console.log('Trello called.');
+	next();
 });
 
 app.post("/trello", async (req, res, next) => {
