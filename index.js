@@ -23,7 +23,6 @@ const chooseRandom = (arr) => arr[parseInt(Math.random() * arr.length)];
 
 
 app.head('/trello', (req, res, next) => {
-	console.log('Trello called.');
 	res.sendStatus(200);
 });
 
