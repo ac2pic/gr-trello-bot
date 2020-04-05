@@ -22,6 +22,11 @@ function sendDiscordMessage(message) {
 const chooseRandom = (arr) => arr[parseInt(Math.random() * arr.length)];
 
 
+app.get('/ping', (req, res, next) => {
+	console.log('Pinged server to keep it alive.');
+	res.sendStatus(200);
+});
+
 app.head('/trello', (req, res, next) => {
 	res.sendStatus(200);
 });
