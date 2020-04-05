@@ -20,12 +20,12 @@ app.post("/trello", async (req, res, next) => {
 
 	await sendDiscordMessage({
 		"content": `The ${name} step has been completed!\n${url}`,
-		"embed": {
+		"embeds": [{
 			"color": 6232278,
 			"image": {
 			  "url": "https://cdn.discordapp.com/attachments/696050162149097613/696129710266253392/tumblr_p4rz82xWrm1vte390o3_500.gif"
 			}
-		}
+		}]
 	});
 	res.send('OK');
 });
