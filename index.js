@@ -19,9 +19,10 @@ app.post("/trello", async (req, res, next) => {
 	const {name, url} = req.body;
 
 	await sendDiscordMessage({
-		"content": `The ${name} step has been completed!\n${url}`,
 		"embeds": [{
 			"color": 6232278,
+			"title": "Card Complete",
+			"description": `The "[${name}](${url})" step has been completed!`,
 			"image": {
 			  "url": "https://cdn.discordapp.com/attachments/696050162149097613/696129710266253392/tumblr_p4rz82xWrm1vte390o3_500.gif"
 			}
