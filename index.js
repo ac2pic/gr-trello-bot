@@ -120,7 +120,8 @@ async function onUpdateCard(action) {
 }
 
 async function onCreateCard(action) {
-	const list = action.list;
+	const data = action.data;
+	const list = data.list;
 	const { name, shortLink } = data.card;
 	const card_url = createCardUrl(shortLink);
 
