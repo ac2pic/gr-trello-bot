@@ -71,7 +71,13 @@ function sendDiscordMessage(message) {
 }
 
 
-const chooseRandom = (arr) => arr[parseInt(Math.random() * arr.length)];
+const chooseRandom = (arr) => {
+	const index = parseInt(Math.random() * arr.length);
+	return {
+		choice: arr[index],
+		index
+	};
+};
 
 
 app.get('/ping', (req, res, next) => {
@@ -96,13 +102,15 @@ async function onUpdateCard(action) {
 			const { name, shortLink } = data.card;
 			const card_url = createCardUrl(shortLink);
 			if (new_list.toLowerCase() === 'completed') {
+				const { choice: { image }, index } = chooseRandom(gifs);
+				console.log(`Selected "${image} at ${index}.`);
 				await sendDiscordMessage({
 					"embeds": [{
 						"color": 6232278,
 						"title": "Step Complete",
 						"description": `The [${name}](${card_url}) step has been completed!`,
 						"image": {
-							"url": chooseRandom(gifs).image
+							"url": image
 						}
 					}]
 				});
