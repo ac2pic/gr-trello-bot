@@ -83,20 +83,19 @@ app.head('/trello', (req, res, next) => {
 	res.sendStatus(200);
 });
 
-app.post("/trello", async (req, res, next) => {
-	const { action, model } = req.body;
+function createCardUrl(shortLink) {
+	return `https://trello.com/c/${shortLink}/`;
+}
 
-	if (action && action.type === 'updateCard') {
+async function onUpdateCard(action) {
+	const data = action.data;
 
-		const data = action.data;
-		if (data.listBefore) {
-			const [old_list, new_list] = [data.listBefore.name, data.listAfter.name];
-
-			if (old_list !== new_list && new_list.toLowerCase() === 'completed') {
-				const { name, shortLink } = data.card;
-
-				const card_url = `https://trello.com/c/${shortLink}/`;
-
+	if (data.listBefore) {
+		const [old_list, new_list] = [data.listBefore.name, data.listAfter.name];
+		if (old_list !== new_list) {
+			const { name, shortLink } = data.card;
+			const card_url = createCardUrl(shortLink);
+			if (new_list.toLowerCase() === 'completed') {
 				await sendDiscordMessage({
 					"embeds": [{
 						"color": 6232278,
@@ -107,12 +106,47 @@ app.post("/trello", async (req, res, next) => {
 						}
 					}]
 				});
+			} else if (new_list.toLowerCase() === 'in progress') {
+				await sendDiscordMessage({
+					"embeds": [{
+						"color": 6232278,
+						"title": "New card in progress",
+						"description": `[${name}](${card_url}) has been moved to "${new_list}".`
+					}]
+				});
 			}
-
 		}
-
 	}
+}
 
+async function onCreateCard(action) {
+	const list = action.list;
+	const { name, shortLink } = data.card;
+	const card_url = createCardUrl(shortLink);
+
+	await sendDiscordMessage({
+		"embeds": [{
+			"color": 6232278,
+			"title": "New card",
+			"description": `[${name}](${card_url}) was created under "${list.name}"!`
+		}]
+	});
+}
+
+app.post("/trello", async (req, res, next) => {
+	const { action, model } = req.body;
+	if (action) {
+		switch (action.type) {
+			case 'updateCard': {
+				await onUpdateCard(action);
+				break;
+			}
+			case 'createCard': {
+				await onCreateCard(action);
+				break;
+			}
+		}
+	}
 	res.send('OK');
 });
 
