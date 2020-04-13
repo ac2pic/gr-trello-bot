@@ -93,8 +93,10 @@ function createCardUrl(shortLink) {
 	return `https://trello.com/c/${shortLink}/`;
 }
 
-async function onUpdateCard(action) {
+async function onUpdateCard(body) {
+	const action = body.action;
 	const data = action.data;
+	const { username } = body.memberCreator;
 
 	if (data.listBefore) {
 		const [old_list, new_list] = [data.listBefore.name, data.listAfter.name];
@@ -108,7 +110,7 @@ async function onUpdateCard(action) {
 					"embeds": [{
 						"color": 6232278,
 						"title": "Step Complete",
-						"description": `The [${name}](${card_url}) step has been completed!`,
+						"description": `${username} marked [${name}](${card_url}) as completed!`,
 						"image": {
 							"url": image
 						}
@@ -119,7 +121,7 @@ async function onUpdateCard(action) {
 					"embeds": [{
 						"color": 6232278,
 						"title": "New card in progress",
-						"description": `[${name}](${card_url}) has been moved to "${new_list}".`
+						"description": `[${name}](${card_url}) has been moved to "${new_list}"!`
 					}]
 				});
 			}
@@ -127,7 +129,9 @@ async function onUpdateCard(action) {
 	}
 }
 
-async function onCreateCard(action) {
+async function onCreateCard(body) {
+	const action = body.action;
+	const { username } = body.memberCreator;
 	const data = action.data;
 	const list = data.list;
 	const { name, shortLink } = data.card;
@@ -137,7 +141,7 @@ async function onCreateCard(action) {
 		"embeds": [{
 			"color": 6232278,
 			"title": "New card",
-			"description": `[${name}](${card_url}) was created under "${list.name}"!`
+			"description": `${username} created [${name}](${card_url}) under "${list.name}"!`
 		}]
 	});
 }
@@ -147,11 +151,11 @@ app.post("/trello", async (req, res, next) => {
 	if (action) {
 		switch (action.type) {
 			case 'updateCard': {
-				await onUpdateCard(action);
+				await onUpdateCard(req.body);
 				break;
 			}
 			case 'createCard': {
-				await onCreateCard(action);
+				await onCreateCard(req.body);
 				break;
 			}
 		}
