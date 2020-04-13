@@ -96,8 +96,7 @@ function createCardUrl(shortLink) {
 async function onUpdateCard(body) {
 	const action = body.action;
 	const data = action.data;
-	// const { username } = body.memberCreator;
-	console.log(body);
+	const { username } = action.memberCreator;
 
 	if (data.listBefore) {
 		const [old_list, new_list] = [data.listBefore.name, data.listAfter.name];
@@ -111,7 +110,7 @@ async function onUpdateCard(body) {
 					"embeds": [{
 						"color": 6232278,
 						"title": "Step Complete",
-						"description": `The card has been marked [${name}](${card_url}) as completed!`,
+						"description": `${username} marked [${name}](${card_url}) as completed!`,
 						"image": {
 							"url": image
 						}
@@ -122,7 +121,7 @@ async function onUpdateCard(body) {
 					"embeds": [{
 						"color": 6232278,
 						"title": "New card in progress",
-						"description": `[${name}](${card_url}) has been moved to "${new_list}"!`
+						"description": `${username} has moved [${name}](${card_url}) to "${new_list}"!`
 					}]
 				});
 			}
@@ -132,7 +131,7 @@ async function onUpdateCard(body) {
 
 async function onCreateCard(body) {
 	const action = body.action;
-	const { username } = body.memberCreator;
+	const { username } = action.memberCreator;
 	const data = action.data;
 	const list = data.list;
 	const { name, shortLink } = data.card;
