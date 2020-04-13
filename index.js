@@ -96,7 +96,8 @@ function createCardUrl(shortLink) {
 async function onUpdateCard(body) {
 	const action = body.action;
 	const data = action.data;
-	const { username } = body.memberCreator;
+	// const { username } = body.memberCreator;
+	console.log(body);
 
 	if (data.listBefore) {
 		const [old_list, new_list] = [data.listBefore.name, data.listAfter.name];
@@ -110,7 +111,7 @@ async function onUpdateCard(body) {
 					"embeds": [{
 						"color": 6232278,
 						"title": "Step Complete",
-						"description": `${username} marked [${name}](${card_url}) as completed!`,
+						"description": `The card has been marked [${name}](${card_url}) as completed!`,
 						"image": {
 							"url": image
 						}
