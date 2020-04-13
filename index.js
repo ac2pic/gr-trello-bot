@@ -93,10 +93,14 @@ function createCardUrl(shortLink) {
 	return `https://trello.com/c/${shortLink}/`;
 }
 
+function createLinkToProfile({ username, fullName }) {
+	return `[${fullName}](https://trello.com/${username})`;
+}
+
 async function onUpdateCard(body) {
 	const action = body.action;
 	const data = action.data;
-	const { username } = action.memberCreator;
+	const member = action.memberCreator;
 
 	if (data.listBefore) {
 		const [old_list, new_list] = [data.listBefore.name, data.listAfter.name];
@@ -110,7 +114,7 @@ async function onUpdateCard(body) {
 					"embeds": [{
 						"color": 6232278,
 						"title": "Step Complete",
-						"description": `${username} marked [${name}](${card_url}) as completed!`,
+						"description": `${createLinkToProfile(member)} marked [${name}](${card_url}) as completed!`,
 						"image": {
 							"url": image
 						}
@@ -121,7 +125,7 @@ async function onUpdateCard(body) {
 					"embeds": [{
 						"color": 6232278,
 						"title": "New card in progress",
-						"description": `${username} has moved [${name}](${card_url}) to "${new_list}"!`
+						"description": `${createLinkToProfile(member)} has moved [${name}](${card_url}) to "${new_list}"!`
 					}]
 				});
 			}
@@ -131,7 +135,7 @@ async function onUpdateCard(body) {
 
 async function onCreateCard(body) {
 	const action = body.action;
-	const { username } = action.memberCreator;
+	const member = action.memberCreator;
 	const data = action.data;
 	const list = data.list;
 	const { name, shortLink } = data.card;
@@ -141,7 +145,7 @@ async function onCreateCard(body) {
 		"embeds": [{
 			"color": 6232278,
 			"title": "New card",
-			"description": `${username} created [${name}](${card_url}) under "${list.name}"!`
+			"description": `${createLinkToProfile(member)} created [${name}](${card_url}) under "${list.name}"!`
 		}]
 	});
 }
